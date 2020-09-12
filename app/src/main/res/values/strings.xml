@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">一起买菜</string>
+    <string name="cd_home">主页</string>
+    <string name="title_home">主页</string>
+    <string name="title_me">我</string>
+    <string name="cd_me">帐号信息</string>
+    <string name="cd_cart">购物车</string>
+    <string name="title_cart">购物车</string>
+    <string name="str_user_name">用户名(最多20字节)</string>
+    <string name="str_password">密码(6~16位)</string>
+    <string name="button_sign_in_up">登录/注册</string>
+    <string name="remember_password">记住密码</string>
+    <string name="string_search">搜索</string>
+    <string name="logo">LOGO</string>
+    <string name="string_cn_its_my_time">一起买菜</string>
+    <string name="it_s_my_time">It\'s My Time</string>
+    <string name="all_goods">所有商品</string>
+    <string name="nameGoods">商品名字</string>
+    <string name="price">价格</string>
+    <string name="name_shop">店铺</string>
+    <string name="display_goods_image">display goods image</string>
+
+</resources>
