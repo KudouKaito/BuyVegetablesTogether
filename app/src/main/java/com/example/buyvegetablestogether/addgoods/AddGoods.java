@@ -9,13 +9,16 @@ import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Picture;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
@@ -28,8 +31,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.example.buyvegetablestogether.R;
+import com.example.buyvegetablestogether.db.GoodsDatabaseHelper;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
 import com.sdx.statusbar.statusbar.StatusBarUtil;
 
 import java.io.File;
@@ -43,24 +48,35 @@ public class AddGoods extends AppCompatActivity {
     public static final int CHOOSE_PHOTO = 102;
     private ImageView imageView;
     private Uri imageUri;
+    private GoodsDatabaseHelper goodsDbHelper = new GoodsDatabaseHelper(this, "GoodsDatabase.db", null, 1);;
     private static final String TAG = "AddGoods";
     private int goods_index;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_goods);
-        StatusBarUtil.setRootViewFitsSystemWindows(this,true);
+
+
+//        goodsDbHelper = new GoodsDatabaseHelper(this, "GoodsDatabase.db", null, 1);
+
+        StatusBarUtil.setRootViewFitsSystemWindows(this, true);
         StatusBarUtil.setStatusBarDarkTheme(this, true);
 
         final Intent intent = getIntent();
         goods_index = intent.getIntExtra("goods_index", 1);
         Button buttonGetImageFromCamera = findViewById(R.id.button_get_image_from_camera);
         Button buttonGetImageFromAlbum = findViewById(R.id.button_get_image_from_album);
+        Button buttonPutAway = findViewById(R.id.button_put_away);
         imageView = findViewById(R.id.image_view_goods_add);
+        final TextInputEditText textInputEditTextGoodsName = findViewById(R.id.text_input_goods_name);
+        final TextInputEditText textInputEditTextPrice = findViewById(R.id.text_input_price);
+        final TextInputEditText textInputEditTextDetail = findViewById(R.id.text_input_detail);
+
         buttonGetImageFromCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                File outputImage = new File(getFilesDir(),goods_index+".jpg");
+                File outputImage = new File(getFilesDir(), goods_index + ".jpg");
                 try {
                     if (outputImage.exists()) {
                         outputImage.delete();
@@ -75,9 +91,9 @@ public class AddGoods extends AppCompatActivity {
                     imageUri = Uri.fromFile(outputImage);
                 }
                 Intent intent_camera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                intent_camera.putExtra(MediaStore.EXTRA_OUTPUT,imageUri);
-                if(intent_camera.resolveActivity(getPackageManager())!=null){//这句作用是如果没有相机则该应用不会闪退，要是不加这句则当系统没有相机应用的时候该应用会闪退
-                    startActivityForResult(intent_camera,TAKE_PHOTO);//启动相机
+                intent_camera.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                if (intent_camera.resolveActivity(getPackageManager()) != null) {//这句作用是如果没有相机则该应用不会闪退，要是不加这句则当系统没有相机应用的时候该应用会闪退
+                    startActivityForResult(intent_camera, TAKE_PHOTO);//启动相机
                 }
             }
         });
@@ -94,6 +110,25 @@ public class AddGoods extends AppCompatActivity {
                 }
             }
         });
+        buttonPutAway.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SQLiteDatabase dbGoods = goodsDbHelper.getWritableDatabase();
+                ContentValues values = new ContentValues();
+                values.put("goods_name", textInputEditTextGoodsName.getText().toString());
+                values.put("price", textInputEditTextPrice.getText().toString());
+                values.put("detail", textInputEditTextDetail.getText().toString());
+                if (((BitmapDrawable) imageView.getBackground()).getBitmap().equals(BitmapFactory.
+                        decodeResource(getResources(), R.mipmap.ic_launcher, null))) {
+                    values.put("has_image", 0);
+                } else {
+                    values.put("has_image", 1);
+                }
+
+
+            }
+        });
+
     }
 
     private void openAlbum() {
@@ -121,7 +156,7 @@ public class AddGoods extends AppCompatActivity {
 
     public static void actionStart(Context context, int goods_index) {
         Intent intent = new Intent(context, AddGoods.class);
-        intent.putExtra("goods_index",goods_index);
+        intent.putExtra("goods_index", goods_index);
         context.startActivity(intent);
     }
 
@@ -152,7 +187,7 @@ public class AddGoods extends AppCompatActivity {
     private void handleImage(Intent data) {
         String imagePath = null;
         Uri uri = data.getData();
-        if (DocumentsContract.isDocumentUri(this,uri)) {
+        if (DocumentsContract.isDocumentUri(this, uri)) {
             String docId = DocumentsContract.getDocumentId(uri);
             if (null != uri && "com.android.providers.media.documents".equals(uri.getAuthority())) {
                 String id = docId.split(":")[1];
@@ -175,15 +210,14 @@ public class AddGoods extends AppCompatActivity {
     private void displayImage(String imagePath) {
         if (null != imagePath) {
             Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
-            File outputImage = new File(getFilesDir(),goods_index+".jpg");
-
+            File outputImage = new File(getFilesDir(), goods_index + ".jpg");
             try {
 
                 if (outputImage.exists()) {
-                    Log.d(TAG, "displayImage: delete"+outputImage.delete());
+                    Log.d(TAG, "displayImage: delete" + outputImage.delete());
                 }
                 FileOutputStream fos = new FileOutputStream(outputImage);
-                bitmap.compress(Bitmap.CompressFormat.JPEG,100,fos);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
                 fos.flush();
                 fos.close();
             } catch (IOException e) {
