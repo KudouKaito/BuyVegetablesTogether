@@ -7,6 +7,7 @@ import androidx.annotation.UiThread;
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import com.example.buyvegetablestogether.R;
  * create an instance of this fragment.
  */
 public class HomePage extends Fragment {
+    private static final String TAG = "HomePage";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -30,7 +32,6 @@ public class HomePage extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
     public HomePage() {
         // Required empty public constructor
     }
@@ -46,7 +47,7 @@ public class HomePage extends Fragment {
     // TOD: Rename and change types and number of parameters
 //    public static HomePage newInstance(String param1, String param2) {
 public static HomePage newInstance() {
-        HomePage fragment = new HomePage();
+    HomePage fragment = new HomePage();
 //        Bundle args = new Bundle();
 //        args.putString(ARG_PARAM1, param1);
 //        args.putString(ARG_PARAM2, param2);
@@ -69,11 +70,11 @@ public static HomePage newInstance() {
         // init var
         Button button_all_goods = requireActivity().findViewById(R.id.button_all_goods);
         // TODO: init search bar
-
+//TODO:修复点击两次点击相同的导航图标按钮没反应的BUG
         button_all_goods.setOnClickListener(new View.OnClickListener() {
             @Override
-
             public void onClick(View view) {
+                Log.d(TAG, "init_home: ???");
                 AllGoodsActivity.actionStart(requireContext());
             }
         });
@@ -92,6 +93,5 @@ public static HomePage newInstance() {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         init_home();
-
     }
 }

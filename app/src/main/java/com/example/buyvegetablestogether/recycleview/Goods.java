@@ -3,15 +3,15 @@ package com.example.buyvegetablestogether.recycleview;
 public class Goods {
     private String nameGoods;
     private String nameShop;
-    private String imagePath;
+    private boolean hasImage;
     private int price;
     private String detail;
 
-    Goods(String nameGoods,String nameShop,String imagePath,String detail,int price) {
+    Goods(String nameGoods,String nameShop,boolean hasImage,String detail,int price) {
         this.nameGoods = nameGoods;
         this.nameShop = nameShop;
         this.price = price;
-        this.imagePath = imagePath;
+        this.hasImage = hasImage;
         this.detail = detail;
     }
 
@@ -21,8 +21,8 @@ public class Goods {
     public String getNameShop() {
         return nameShop;
     }
-    public String getImagePath() {
-        return imagePath;
+    public boolean judgeHasImage() {
+        return hasImage;
     }
     public int getPrice() {
         return price;

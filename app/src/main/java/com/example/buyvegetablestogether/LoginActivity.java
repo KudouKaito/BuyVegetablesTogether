@@ -50,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 //        StatusBarUtil.setStutatusBar(this, true, true, 1);
-        StatusBarUtil.setRootViewFitsSystemWindows(this,true);
+//        StatusBarUtil.setRootViewFitsSystemWindows(this,true);
 //        StatusBarUtil.setStatusBarDarkTheme(this,true);
         init();
     }
@@ -187,6 +187,7 @@ public class LoginActivity extends AppCompatActivity {
                             values.put("password", mPassword);
                             dbUser.insert("LoginInfo", null, values);
                             values.clear();
+                            saveCurrentUser();
                             rememberPassword();
                             Toast.makeText(LoginActivity.this, "注册并登录成功!", Toast.LENGTH_SHORT).show();
                             finish();

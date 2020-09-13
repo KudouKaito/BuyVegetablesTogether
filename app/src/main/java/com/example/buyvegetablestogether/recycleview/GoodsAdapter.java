@@ -1,7 +1,8 @@
 package com.example.buyvegetablestogether.recycleview;
 
 import android.content.Context;
-import android.net.Uri;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,7 +60,12 @@ public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.ViewHolder> 
         holder.textViewPrice.setText(goods.getPrice());
         // TODO: 读取读取图片并且显示到holder.imageViewGoods上
         // 如果路径为空, 则显示LOGO
-        Glide.with(mContext).load(goods.getImagePath().equals("")?R.mipmap.ic_launcher: goods.getImagePath()).into(holder.imageViewGoods);
+        if (goods.judgeHasImage()) {
+            Bitmap bitmap = BitmapFactory.decodeFile(mContext.getFilesDir().getAbsolutePath() + position + ".jpg");
+            holder.imageViewGoods.setImageBitmap(bitmap);
+        } else {
+            Glide.with(mContext).load(R.mipmap.ic_launcher).into(holder.imageViewGoods);
+        }
     }
 
     @Override

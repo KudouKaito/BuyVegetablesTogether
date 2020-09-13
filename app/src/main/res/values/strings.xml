@@ -19,5 +19,14 @@
     <string name="price">价格</string>
     <string name="name_shop">店铺</string>
     <string name="display_goods_image">display goods image</string>
+    <string name="get_from_camera">从摄像头获取</string>
+    <string name="get_from_album">从相册中获取</string>
+    <string name="goods_name">商品名称</string>
+    <string name="detail">详细介绍</string>
+    <string name="putaway">上架</string>
+    <string name="goods_price">商品价格</string>
+    <string name="search">搜索</string>
+    <string name="display_all_goods">查看所有商品</string>
+    <string name="background">background</string>
 
 </resources>

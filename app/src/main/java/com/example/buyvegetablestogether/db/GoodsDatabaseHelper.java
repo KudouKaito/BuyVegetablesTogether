@@ -12,7 +12,7 @@ public class GoodsDatabaseHelper extends SQLiteOpenHelper {
             + "goods_name text, "
             + "price real, "
             + "shop_name text, "
-            + "image_path text, "
+            + "has_image int, "
             + "detail text)";
 
 

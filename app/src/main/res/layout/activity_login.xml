@@ -4,10 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_vegetable"
-    android:fitsSystemWindows="true"
-    android:paddingTop="@dimen/toolbar_padding_top"
     tools:context=".LoginActivity">
+<!--    android:background="@drawable/bg_vegetable"-->
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/background"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/vag" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/circle_image_view_login"
