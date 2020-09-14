@@ -11,9 +11,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.buyvegetablestogether.addgoods.AddGoods;
@@ -21,7 +19,6 @@ import com.example.buyvegetablestogether.db.GoodsDatabaseHelper;
 import com.example.buyvegetablestogether.recycleview.Goods;
 import com.example.buyvegetablestogether.recycleview.GoodsAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.sdx.statusbar.statusbar.StatusBarUtil;
 
 import java.util.ArrayList;
@@ -39,7 +36,7 @@ public class AllGoodsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_all_goods);
         StatusBarUtil.setRootViewFitsSystemWindows(this, true);
         StatusBarUtil.setStatusBarDarkTheme(this, true);
-        initAllGoods();
+//        initAllGoods();
     }
 
     private void initAllGoods() {
@@ -64,11 +61,11 @@ public class AllGoodsActivity extends AppCompatActivity {
                 }
             }
         });
-        threadLoadingGoods();
+        loadingGoods();
     }
 
-    private void threadLoadingGoods() {
-        runOnUiThread(new Runnable() {
+    private void loadingGoods() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 goodsList.clear();
@@ -87,15 +84,21 @@ public class AllGoodsActivity extends AppCompatActivity {
                         ));
                     } while (cursor.moveToNext());
                 }
-                // 摆放到recyclerView上
-                RecyclerView recyclerView = findViewById(R.id.recyclerview_all_goods);
-                LinearLayoutManager layoutManager = new LinearLayoutManager(AllGoodsActivity.this);
-                recyclerView.setLayoutManager(layoutManager);
-                GoodsAdapter adapter = new GoodsAdapter(goodsList);
-                recyclerView.setAdapter(adapter);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // 摆放到recyclerView上
+                        RecyclerView recyclerView = findViewById(R.id.recyclerview_all_goods);
+                        LinearLayoutManager layoutManager = new LinearLayoutManager(AllGoodsActivity.this);
+                        recyclerView.setLayoutManager(layoutManager);
+                        GoodsAdapter adapter = new GoodsAdapter(goodsList);
+                        recyclerView.setAdapter(adapter);
+                    }
+                });
             }
-        });
-    }
+        }).start();
+
+        }
 
     public static void actionStart(Context context) {
         Intent intent = new Intent(context, AllGoodsActivity.class);

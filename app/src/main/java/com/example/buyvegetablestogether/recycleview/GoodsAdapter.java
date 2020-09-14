@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.UiThread;
 import androidx.arch.core.util.Function;
 import androidx.core.util.Consumer;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,6 +29,7 @@ public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.ViewHolder> 
     private Context mContext;
     private static final String TAG = "GoodsAdapter";
     private List<Goods> mGoodsList;
+    private Goods goods;
 
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -63,13 +65,15 @@ public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Goods goods = mGoodsList.get(position);
+
+        goods = mGoodsList.get(position);
         holder.textViewNameGoods.setText(goods.getNameGoods());
         holder.textViewNameShop.setText(goods.getNameShop());
         holder.textViewPrice.setText(String.valueOf(goods.getPrice()));
 
         // TODO: 读取读取图片并且显示到holder.imageViewGoods上
         // 如果路径为空, 则显示LOGO
+
         if (goods.judgeHasImage()) {
             Bitmap bitmap = goods.getImage();
             holder.imageViewGoods.setImageBitmap(bitmap);
