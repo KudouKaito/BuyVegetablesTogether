@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
+<androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view_goods_list"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginTop="16dp"
     android:layout_height="128dp"
     >
     <LinearLayout
@@ -34,14 +36,18 @@
                 android:id="@+id/text_view_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:layout_marginTop="4dp"
-                android:text="@string/price"/>
+                android:text="@string/price"
+                app:drawableStartCompat="@drawable/ic_cny" />
             <TextView
                 android:id="@+id/text_view_name_shop"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:layout_marginTop="4dp"
-                android:text="@string/name_shop"/>
+                android:text="@string/name_shop"
+                app:drawableStartCompat="@drawable/ic_baseline_storefront_24" />
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

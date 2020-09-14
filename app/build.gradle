@@ -29,6 +29,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.github.NameZIKANG:EStatusBar:1.0.3'
+    implementation 'com.jaywei:compresstool:1.0.2'
 
     def nav_version = "2.3.0"
 

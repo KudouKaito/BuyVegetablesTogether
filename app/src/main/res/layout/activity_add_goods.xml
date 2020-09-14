@@ -16,6 +16,7 @@
             android:layout_height="112dp"
             android:layout_margin="16dp"
             android:scaleType="centerCrop"
+            android:tag="no_select"
             android:contentDescription="@string/display_goods_image"
             android:src="@mipmap/ic_launcher"/>
         <LinearLayout

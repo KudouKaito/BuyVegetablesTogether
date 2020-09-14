@@ -17,9 +17,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Picture;
-import android.graphics.drawable.BitmapDrawable;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,10 +26,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.example.buyvegetablestogether.LoginActivity;
 import com.example.buyvegetablestogether.R;
 import com.example.buyvegetablestogether.db.GoodsDatabaseHelper;
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.sdx.statusbar.statusbar.StatusBarUtil;
@@ -41,14 +39,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 
 public class AddGoods extends AppCompatActivity {
     public static final int TAKE_PHOTO = 101;
     public static final int CHOOSE_PHOTO = 102;
     private ImageView imageView;
     private Uri imageUri;
-    private GoodsDatabaseHelper goodsDbHelper = new GoodsDatabaseHelper(this, "GoodsDatabase.db", null, 1);;
+    private GoodsDatabaseHelper dbHelperGoods = new GoodsDatabaseHelper(this, "GoodsDatabase.db", null, 1);;
     private static final String TAG = "AddGoods";
     private int goods_index;
 
@@ -56,10 +53,6 @@ public class AddGoods extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_goods);
-
-
-//        goodsDbHelper = new GoodsDatabaseHelper(this, "GoodsDatabase.db", null, 1);
-
         StatusBarUtil.setRootViewFitsSystemWindows(this, true);
         StatusBarUtil.setStatusBarDarkTheme(this, true);
 
@@ -113,18 +106,26 @@ public class AddGoods extends AppCompatActivity {
         buttonPutAway.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SQLiteDatabase dbGoods = goodsDbHelper.getWritableDatabase();
+                SQLiteDatabase dbGoods = dbHelperGoods.getWritableDatabase();
                 ContentValues values = new ContentValues();
                 values.put("goods_name", textInputEditTextGoodsName.getText().toString());
-                values.put("price", textInputEditTextPrice.getText().toString());
+                values.put("price", Double.valueOf(textInputEditTextPrice.getText().
+                        toString().equals("") ? "0" : textInputEditTextPrice.getText().toString()));
                 values.put("detail", textInputEditTextDetail.getText().toString());
-                if (((BitmapDrawable) imageView.getBackground()).getBitmap().equals(BitmapFactory.
-                        decodeResource(getResources(), R.mipmap.ic_launcher, null))) {
-                    values.put("has_image", 0);
-                } else {
+                if (imageView.getTag().equals("select")) {
                     values.put("has_image", 1);
+                } else {
+                    values.put("has_image", 0);
                 }
-
+                values.put("shop_name", LoginActivity.currentUserName);
+                if (-1 != dbGoods.insert("goods", null, values)) {
+                    Toast.makeText(AddGoods.this, "上架成功!",
+                            Toast.LENGTH_LONG).show();
+                    finish();
+                } else {
+                    Toast.makeText(AddGoods.this, "上架失败, 原因未知, 请联系开发者",
+                            Toast.LENGTH_LONG).show();
+                }
 
             }
         });
@@ -169,6 +170,7 @@ public class AddGoods extends AppCompatActivity {
                     try {
                         Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri));
                         imageView.setImageBitmap(bitmap);
+                        imageView.setTag("select");
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
@@ -214,7 +216,7 @@ public class AddGoods extends AppCompatActivity {
             try {
 
                 if (outputImage.exists()) {
-                    Log.d(TAG, "displayImage: delete" + outputImage.delete());
+                    outputImage.delete();
                 }
                 FileOutputStream fos = new FileOutputStream(outputImage);
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
@@ -224,6 +226,7 @@ public class AddGoods extends AppCompatActivity {
                 e.printStackTrace();
             }
             imageView.setImageBitmap(bitmap);
+            imageView.setTag("select");
         } else {
             Snackbar.make(imageView, "获取图片失败", Snackbar.LENGTH_LONG).show();
         }
