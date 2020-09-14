@@ -12,6 +12,12 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
             + "id integer primary key autoincrement, "
             + "user_name text, "
             + "password text)";
+    public static final String CREATE_USER_BASIC_INFO = "create table BasicInfo ("
+            + "id integer primary key autoincrement, "
+            + "user_name text, "
+            //+ "shop_name text)";
+            + "real_name text"
+            +"shipping_address)";
     private View mView;
     private Context mContext;
     public UserDatabaseHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
@@ -22,6 +28,7 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_USER_LOGIN_INFO);
+        db.execSQL(CREATE_USER_BASIC_INFO);
     }
 
     @Override

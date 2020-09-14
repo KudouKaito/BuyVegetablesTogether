@@ -12,13 +12,13 @@ public class Goods {
     private String detail;
     private Bitmap image;
 
-    public Goods(Context context,int position, String nameGoods, String nameShop, boolean hasImage, String detail, double price) {
+    public Goods(Context context,int id, String nameGoods, String nameShop, boolean hasImage, String detail, double price) {
         this.nameGoods = nameGoods;
         this.nameShop = nameShop;
         this.price = price;
         this.hasImage = hasImage;
         this.detail = detail;
-        this.image = BitmapFactory.decodeFile(context.getFilesDir().getAbsolutePath() + "/" + (position + 1) + ".jpg");
+        this.image = BitmapFactory.decodeFile(context.getFilesDir().getAbsolutePath() + "/" + id + ".jpg");
     }
     public Goods(Context context,int id,String nameGoods,String nameShop,boolean hasImage,double price) {
         this(context,id,nameGoods, nameShop, hasImage, null, price);

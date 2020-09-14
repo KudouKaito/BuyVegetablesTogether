@@ -12,6 +12,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.buyvegetablestogether.addgoods.AddGoods;
@@ -27,6 +29,7 @@ import java.util.List;
 public class AllGoodsActivity extends AppCompatActivity {
     private static final String TAG = "AllGoodsActivity";
     private static final int REQUEST_CODE_ALL_GOODS_TO_ADD_GOODS_LOGIN = 4;
+    public static final int REQUEST_CODE_ALL_GOOD_TO_ADD_GOODS = 5;
     private List<Goods> goodsList = new ArrayList<Goods>();
     private GoodsDatabaseHelper dbHelperGoods = new GoodsDatabaseHelper(this, "GoodsDatabase.db", null, 1);;
 
@@ -36,13 +39,20 @@ public class AllGoodsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_all_goods);
         StatusBarUtil.setRootViewFitsSystemWindows(this, true);
         StatusBarUtil.setStatusBarDarkTheme(this, true);
-
-        // 放这也可以，不过恢复的时候也要加载，所以就不放这了
-//        initAllGoods();
+        initAllGoods();
 
     }
 
     private void initAllGoods() {
+        // init top search bar
+        Button buttonSearch = findViewById(R.id.button_search);
+        EditText editTextSearch = findViewById(R.id.edit_text_search);
+        buttonSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SearchGoodsActivity.actionStart(AllGoodsActivity.this, editTextSearch.getText().toString());
+            }
+        });
         // init var
         Toolbar toolbar = findViewById(R.id.toolbar_with_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -51,7 +61,7 @@ public class AllGoodsActivity extends AppCompatActivity {
                 finish();
             }
         });
-        FloatingActionButton fab = findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab_add_goods);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -60,7 +70,8 @@ public class AllGoodsActivity extends AppCompatActivity {
                     Intent intent = new Intent(AllGoodsActivity.this, LoginActivity.class);
                     startActivityForResult(intent, REQUEST_CODE_ALL_GOODS_TO_ADD_GOODS_LOGIN);
                 } else {
-                    AddGoods.actionStart(AllGoodsActivity.this, goodsList.size()+1);
+                    AddGoods.actionStartForResult(AllGoodsActivity.this,
+                            goodsList.size() + 1, REQUEST_CODE_ALL_GOOD_TO_ADD_GOODS);
                 }
             }
         });
@@ -68,30 +79,35 @@ public class AllGoodsActivity extends AppCompatActivity {
     }
 
     private void loadingGoods() {
+        // 转圈圈
+        findViewById(R.id.progress_bar).setVisibility(View.VISIBLE);
         new Thread(new Runnable() {
             @Override
             public void run() {
                 goodsList.clear();
                 // TODO: 向列表中添加数据
                 SQLiteDatabase dbGoods = dbHelperGoods.getWritableDatabase();
-                Cursor cursor = dbGoods.query("goods", new String[]{"goods_name", "price", "shop_name", "has_image"}, null, null, null, null, null);
+
+                Cursor cursor = dbGoods.query("goods", new String[]{"id","goods_name", "price", "shop_name", "has_image"}, null, null, null, null, null);
                 if (cursor.moveToFirst()) {
                     do {
                         goodsList.add(new Goods(
                                 AllGoodsActivity.this,
-                                cursor.getPosition(),
+                                cursor.getInt(cursor.getColumnIndex("id")),
                                 cursor.getString(cursor.getColumnIndex("goods_name")),
                                 cursor.getString(cursor.getColumnIndex("shop_name")),
                                 1 == cursor.getInt(cursor.getColumnIndex("has_image")),
                                 cursor.getDouble(cursor.getColumnIndex("price"))
                         ));
+
                     } while (cursor.moveToNext());
                 }
+                cursor.close();
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         // 摆放到recyclerView上
-                        RecyclerView recyclerView = findViewById(R.id.recyclerview_all_goods);
+                        RecyclerView recyclerView = findViewById(R.id.recyclerview_search_goods);
                         LinearLayoutManager layoutManager = new LinearLayoutManager(AllGoodsActivity.this);
                         recyclerView.setLayoutManager(layoutManager);
                         GoodsAdapter adapter = new GoodsAdapter(goodsList);
@@ -118,18 +134,16 @@ public class AllGoodsActivity extends AppCompatActivity {
                 if (LoginActivity.currentPassword.equals("")) {
                     Toast.makeText(this, "请先登录", Toast.LENGTH_SHORT).show();
                 } else {
-                    AddGoods.actionStart(AllGoodsActivity.this, goodsList.size()+1);
+                    AddGoods.actionStartForResult(AllGoodsActivity.this,
+                            goodsList.size()+1,REQUEST_CODE_ALL_GOOD_TO_ADD_GOODS);
+                }
+                break;
+            case REQUEST_CODE_ALL_GOOD_TO_ADD_GOODS:
+                if (RESULT_OK == resultCode) {
+                    initAllGoods();
                 }
                 break;
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        // 转圈圈
-        findViewById(R.id.progress_bar).setVisibility(View.VISIBLE);
-        initAllGoods();
     }
 }
 

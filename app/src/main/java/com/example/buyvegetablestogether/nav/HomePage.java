@@ -3,18 +3,17 @@ package com.example.buyvegetablestogether.nav;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.UiThread;
-import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.example.buyvegetablestogether.AllGoodsActivity;
 import com.example.buyvegetablestogether.R;
+import com.example.buyvegetablestogether.SearchGoodsActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -68,18 +67,26 @@ public static HomePage newInstance() {
 
     private void init_home() {
         // init var
-        Button button_all_goods = requireActivity().findViewById(R.id.button_all_goods);
-        // TODO: init search bar
+        Button buttonAllGoods = requireActivity().findViewById(R.id.button_all_goods);
+
 //TODO:修复点击两次点击相同的导航图标按钮没反应的BUG
-        button_all_goods.setOnClickListener(new View.OnClickListener() {
+        buttonAllGoods.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "init_home: ???");
                 AllGoodsActivity.actionStart(requireContext());
             }
         });
+        // init search bar
+        Button buttonSearch = requireActivity().findViewById(R.id.button_search);
+        EditText editTextContent = requireActivity().findViewById(R.id.edit_text_search);
+        buttonSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SearchGoodsActivity.actionStart(requireContext(),editTextContent.getText().toString());
+            }
+        });
 
-    }
+}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -94,4 +101,5 @@ public static HomePage newInstance() {
         super.onActivityCreated(savedInstanceState);
         init_home();
     }
+
 }

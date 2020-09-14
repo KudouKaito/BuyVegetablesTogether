@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -121,6 +122,8 @@ public class AddGoods extends AppCompatActivity {
                 if (-1 != dbGoods.insert("goods", null, values)) {
                     Toast.makeText(AddGoods.this, "上架成功!",
                             Toast.LENGTH_LONG).show();
+                    Intent intentReturn = getIntent();
+                    setResult(RESULT_OK);
                     finish();
                 } else {
                     Toast.makeText(AddGoods.this, "上架失败, 原因未知, 请联系开发者",
@@ -159,6 +162,12 @@ public class AddGoods extends AppCompatActivity {
         Intent intent = new Intent(context, AddGoods.class);
         intent.putExtra("goods_index", goods_index);
         context.startActivity(intent);
+    }
+
+    public static void actionStartForResult(Context context, int goods_index, int requestCode) {
+        Intent intent = new Intent(context, AddGoods.class);
+        intent.putExtra("goods_index", goods_index);
+        ((AppCompatActivity) context).startActivityForResult(intent, requestCode);
     }
 
     @Override
