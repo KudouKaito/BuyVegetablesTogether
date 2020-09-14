@@ -6,12 +6,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".AllGoodsActivity">
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white">
-        <include layout="@layout/toolbar_with_back" />
-    </com.google.android.material.appbar.AppBarLayout>
+
+    <include layout="@layout/toolbar_with_back" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_all_goods"
@@ -26,5 +22,11 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         app:srcCompat="@drawable/ic_baseline_add_24" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -36,7 +36,10 @@ public class AllGoodsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_all_goods);
         StatusBarUtil.setRootViewFitsSystemWindows(this, true);
         StatusBarUtil.setStatusBarDarkTheme(this, true);
+
+        // 放这也可以，不过恢复的时候也要加载，所以就不放这了
 //        initAllGoods();
+
     }
 
     private void initAllGoods() {
@@ -93,12 +96,12 @@ public class AllGoodsActivity extends AppCompatActivity {
                         recyclerView.setLayoutManager(layoutManager);
                         GoodsAdapter adapter = new GoodsAdapter(goodsList);
                         recyclerView.setAdapter(adapter);
+                        findViewById(R.id.progress_bar).setVisibility(View.GONE);
                     }
                 });
             }
         }).start();
-
-        }
+    }
 
     public static void actionStart(Context context) {
         Intent intent = new Intent(context, AllGoodsActivity.class);
@@ -124,6 +127,8 @@ public class AllGoodsActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        // 转圈圈
+        findViewById(R.id.progress_bar).setVisibility(View.VISIBLE);
         initAllGoods();
     }
 }
