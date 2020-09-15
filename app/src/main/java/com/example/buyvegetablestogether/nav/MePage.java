@@ -1,22 +1,26 @@
 package com.example.buyvegetablestogether.nav;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.buyvegetablestogether.LoginActivity;
 import com.example.buyvegetablestogether.R;
+import com.example.buyvegetablestogether.SettingsActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 /**
@@ -30,6 +34,7 @@ public class MePage extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private final int REQUEST_CODE_ME_TO_SETTINGS =6;
 
 //     TOD: Rename and change types of parameters
 //    private String mParam1;
@@ -65,13 +70,7 @@ public class MePage extends Fragment {
 //            mParam1 = getArguments().getString(ARG_PARAM1);
 //            mParam2 = getArguments().getString(ARG_PARAM2);
 //        }
-        LoginActivity.currentUserVerify(requireContext());  // 进行先行登录帐号有效性验证
-        if (LoginActivity.currentUserName.equals("")) {  // 验证没通过
-            Intent intent = new Intent(requireContext(), LoginActivity.class);
-            startActivityForResult(intent,3);
-        } else {
-            displayMe();
-        }
+
     }
 
     @Override
@@ -95,12 +94,56 @@ public class MePage extends Fragment {
                     displayMe();
                 }
                 break;
+            case REQUEST_CODE_ME_TO_SETTINGS:
+                if (Activity.RESULT_OK==resultCode) {
+                    initMe();
+                }
+                break;
             default:
         }
 
     }
-// TODO: DisplayMe
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initMe();
+    }
+
+    private void initMe() {
+        LoginActivity.currentUserVerify(requireContext());  // 进行先行登录帐号有效性验证
+        if (LoginActivity.currentUserName.equals("")) {  // 验证没通过
+            Intent intent = new Intent(requireContext(), LoginActivity.class);
+            startActivityForResult(intent,3);
+        } else {
+            displayMe();
+        }
+
+    }
+
+    // TODO: DisplayMe
     private void displayMe() {
-        Log.d(TAG, "displayMe: 333333333333333333");
+
+        // 设置按钮
+        Button buttonSettings = requireActivity().findViewById(R.id.button_settings);
+        buttonSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //  设置界面
+                Intent intent = new Intent(requireContext(),SettingsActivity.class);
+                startActivityForResult(intent, REQUEST_CODE_ME_TO_SETTINGS);
+            }
+        });
+        // 查看订单按钮
+        Button buttonDeal = requireActivity().findViewById(R.id.button_deal);
+        buttonDeal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO: 打开订单Activity
+            }
+        });
+        // 显示用户名
+        TextView textViewCurrentUserName = requireActivity().findViewById(R.id.text_view_current_user_name);
+        textViewCurrentUserName.setText(LoginActivity.currentUserName);
     }
 }

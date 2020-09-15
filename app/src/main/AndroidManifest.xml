@@ -3,6 +3,7 @@
     package="com.example.buyvegetablestogether">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,9 +11,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity android:name=".addgoods.AddGoods"
-            android:label="添加商品"/>
+        <activity android:name=".ChangePasswordActivity"
+            android:label="修改密码"
+            android:theme="@style/Theme.MaterialComponents.Light.Dialog"/>
+        <activity android:name=".SettingsActivity" />
+        <activity
+            android:name=".addgoods.AddGoods"
+            android:label="添加商品" />
         <activity android:name=".AllGoodsActivity" />
         <activity android:name=".SearchGoodsActivity" />
         <activity android:name=".LoginActivity" />
@@ -23,16 +28,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <provider
-            android:authorities="com.example.buyvegetablestogether.fileprovider"
-            android:name="androidx.core.content.FileProvider"
-            android:exported="false"
-            android:grantUriPermissions="true"
-            >
-            <meta-data android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"
-                />
 
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.buyvegetablestogether.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
         </provider>
     </application>
 

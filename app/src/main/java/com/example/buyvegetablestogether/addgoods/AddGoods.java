@@ -3,6 +3,7 @@ package com.example.buyvegetablestogether.addgoods;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -58,6 +59,14 @@ public class AddGoods extends AppCompatActivity {
         StatusBarUtil.setStatusBarDarkTheme(this, true);
 
         final Intent intent = getIntent();
+        // 返回按钮
+        Toolbar toolbar = findViewById(R.id.toolbar_with_back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         goods_index = intent.getIntExtra("goods_index", 1);
         Button buttonGetImageFromCamera = findViewById(R.id.button_get_image_from_camera);
         Button buttonGetImageFromAlbum = findViewById(R.id.button_get_image_from_album);
@@ -204,18 +213,19 @@ public class AddGoods extends AppCompatActivity {
                 String id = docId.split(":")[1];
                 String selection = MediaStore.Images.Media._ID + "=" + id;
                 imagePath = getImagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, selection);
+
             } else if (null != uri && "com.android.providers.download.documents".equals(uri.getAuthority())) {
                 Uri contentUri = ContentUris.withAppendedId(Uri.
                         parse("content://downloads/public_downloads"), Long.parseLong(docId));
                 imagePath = getImagePath(contentUri, null);
-            } else if ("content".equalsIgnoreCase(uri.getScheme())) {
-                imagePath = getImagePath(uri, null);
-            } else if ("file".equalsIgnoreCase(uri.getScheme())) {
-                imagePath = uri.getPath();
             }
+        } else if ("content".equalsIgnoreCase(uri.getScheme())) {
 
-            displayImage(imagePath);
+            imagePath = getImagePath(uri, null);
+        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            imagePath = uri.getPath();
         }
+        displayImage(imagePath);
     }
 
     private void displayImage(String imagePath) {

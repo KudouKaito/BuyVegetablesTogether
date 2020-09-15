@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -64,7 +65,7 @@ public class SearchGoodsActivity extends AppCompatActivity {
             @Override
             public void run() {
                 goodsList.clear();
-                // TODO: 向列表中添加数据
+                // 向列表中添加数据
                 SQLiteDatabase dbGoods = dbHelperGoods.getWritableDatabase();
                 Intent intent = getIntent();
                 String searchContent = intent.getStringExtra("search_content");
@@ -78,6 +79,7 @@ public class SearchGoodsActivity extends AppCompatActivity {
                 Cursor cursor = dbGoods.rawQuery(sql, selectionArgs);
                 if (cursor.moveToFirst()) {
                     do {
+                        Log.d(TAG, "run: id: " + cursor.getInt(cursor.getColumnIndex("id")));
                         goodsList.add(new Goods(
                                 SearchGoodsActivity.this,
                                 cursor.getInt(cursor.getColumnIndex("id")),
@@ -105,9 +107,9 @@ public class SearchGoodsActivity extends AppCompatActivity {
         }).start();
     }
 
-    public static void actionStart(Context context,String searchContent) {
+    public static void actionStart(Context context, String searchContent) {
         Intent intent = new Intent(context, SearchGoodsActivity.class);
-        intent.putExtra("search_content",searchContent);
+        intent.putExtra("search_content", searchContent);
         context.startActivity(intent);
     }
 

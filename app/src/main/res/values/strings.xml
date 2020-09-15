@@ -28,5 +28,15 @@
     <string name="search">搜索</string>
     <string name="display_all_goods">查看所有商品</string>
     <string name="background">background</string>
+    <string name="str_info_user_name">用户名</string>
+    <string name="order">查看订单</string>
+    <string name="settings">设置</string>
+    <string name="change_basic_info">修改基本信息</string>
+    <string name="change_password">修改密码</string>
+    <string name="logout">退出登录</string>
+    <string name="change">修改</string>
+    <string name="confirm_new_password">确认新密码</string>
+    <string name="input_new_password">输入新密码(6~16位)</string>
+    <string name="input_old_password">输入旧密码(同上)</string>
 
 </resources>

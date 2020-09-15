@@ -85,7 +85,7 @@ public class AllGoodsActivity extends AppCompatActivity {
             @Override
             public void run() {
                 goodsList.clear();
-                // TODO: 向列表中添加数据
+                // 向列表中添加数据
                 SQLiteDatabase dbGoods = dbHelperGoods.getWritableDatabase();
 
                 Cursor cursor = dbGoods.query("goods", new String[]{"id","goods_name", "price", "shop_name", "has_image"}, null, null, null, null, null);
@@ -122,7 +122,6 @@ public class AllGoodsActivity extends AppCompatActivity {
     public static void actionStart(Context context) {
         Intent intent = new Intent(context, AllGoodsActivity.class);
         context.startActivity(intent);
-
     }
 
     @Override
