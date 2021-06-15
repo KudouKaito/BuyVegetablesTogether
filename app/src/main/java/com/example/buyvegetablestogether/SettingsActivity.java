@@ -29,6 +29,15 @@ public class SettingsActivity extends AppCompatActivity {
                 finish();
             }
         });
+        // 修改基本信息
+        Button buttonModifyBasicInfo = findViewById(R.id.button_modify_basic_info);
+        buttonModifyBasicInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SettingsActivity.this, BasicInfoActivity.class);
+                startActivity(intent);
+            }
+        });
         // 修改密码按钮
         Button buttonChangePassword = findViewById(R.id.button_go_to_change_password);
         buttonChangePassword.setOnClickListener(new View.OnClickListener() {
@@ -36,7 +45,6 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(SettingsActivity.this, ChangePasswordActivity.class);
                 startActivity(intent);
-
             }
         });
         // logout

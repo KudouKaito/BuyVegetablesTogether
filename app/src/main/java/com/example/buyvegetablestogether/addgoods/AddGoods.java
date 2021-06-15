@@ -9,22 +9,17 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -33,13 +28,14 @@ import android.widget.Toast;
 import com.example.buyvegetablestogether.LoginActivity;
 import com.example.buyvegetablestogether.R;
 import com.example.buyvegetablestogether.db.GoodsDatabaseHelper;
+import com.example.buyvegetablestogether.utils.MyFileUtils;
+import com.example.buyvegetablestogether.utils.ImageProcessor;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.sdx.statusbar.statusbar.StatusBarUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class AddGoods extends AppCompatActivity {
@@ -196,7 +192,7 @@ public class AddGoods extends AppCompatActivity {
                 break;
             case CHOOSE_PHOTO:
                 if (resultCode == RESULT_OK) {
-                    handleImage(data);
+                     displayImage(ImageProcessor.handleIntentImageToPath(this,data));
                 }
                 break;
             default:
@@ -204,46 +200,14 @@ public class AddGoods extends AppCompatActivity {
         }
     }
 
-    private void handleImage(Intent data) {
-        String imagePath = null;
-        Uri uri = data.getData();
-        if (DocumentsContract.isDocumentUri(this, uri)) {
-            String docId = DocumentsContract.getDocumentId(uri);
-            if (null != uri && "com.android.providers.media.documents".equals(uri.getAuthority())) {
-                String id = docId.split(":")[1];
-                String selection = MediaStore.Images.Media._ID + "=" + id;
-                imagePath = getImagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, selection);
 
-            } else if (null != uri && "com.android.providers.download.documents".equals(uri.getAuthority())) {
-                Uri contentUri = ContentUris.withAppendedId(Uri.
-                        parse("content://downloads/public_downloads"), Long.parseLong(docId));
-                imagePath = getImagePath(contentUri, null);
-            }
-        } else if ("content".equalsIgnoreCase(uri.getScheme())) {
-
-            imagePath = getImagePath(uri, null);
-        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
-            imagePath = uri.getPath();
-        }
-        displayImage(imagePath);
-    }
 
     private void displayImage(String imagePath) {
+        // 复制图片到数据里
         if (null != imagePath) {
-            Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
-            File outputImage = new File(getFilesDir(), goods_index + ".jpg");
-            try {
-
-                if (outputImage.exists()) {
-                    outputImage.delete();
-                }
-                FileOutputStream fos = new FileOutputStream(outputImage);
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                fos.flush();
-                fos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            MyFileUtils.copyFileForce(imagePath,getFilesDir()+"/"+goods_index + ".jpg");
+            // 读图片
+            Bitmap bitmap = ImageProcessor.readImageResizeToDp(this, imagePath, 112, 112);
             imageView.setImageBitmap(bitmap);
             imageView.setTag("select");
         } else {
@@ -251,15 +215,4 @@ public class AddGoods extends AppCompatActivity {
         }
     }
 
-    private String getImagePath(Uri uri, String selection) {
-        String path = null;
-        Cursor cursor = getContentResolver().query(uri, null, selection, null, null);
-        if (null != cursor) {
-            if (cursor.moveToFirst()) {
-                path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-            }
-            cursor.close();
-        }
-        return path;
-    }
 }

@@ -13,11 +13,11 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
             + "user_name text, "
             + "password text)";
     public static final String CREATE_USER_BASIC_INFO = "create table BasicInfo ("
-            + "id integer primary key autoincrement, "
-            + "user_name text, "
+            + "user_name text primary key, "
             //+ "shop_name text)";
-            + "real_name text"
-            +"shipping_address)";
+            + "real_name text, "
+            + "phone_number text, "
+            + "address text)";
     private View mView;
     private Context mContext;
     public UserDatabaseHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {

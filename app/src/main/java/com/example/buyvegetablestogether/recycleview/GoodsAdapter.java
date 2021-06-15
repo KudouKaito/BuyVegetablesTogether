@@ -21,6 +21,7 @@ import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.buyvegetablestogether.DetailActivity;
 import com.example.buyvegetablestogether.R;
 
 import java.io.ByteArrayOutputStream;
@@ -34,6 +35,7 @@ import news.jaywei.com.compresslib.CompressTools;
 
 public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.ViewHolder> {
     private Context mContext;
+    private View mView;
     private static final String TAG = "GoodsAdapter";
     private List<Goods> mGoodsList;
     private ArrayList<ImageLoadTask> pendingImageLoading = new ArrayList<ImageLoadTask>();
@@ -51,7 +53,6 @@ public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.ViewHolder> 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
             imageViewGoods = itemView.findViewById(R.id.image_view_goods);
             textViewNameGoods = itemView.findViewById(R.id.text_view_name_goods);
             textViewPrice = itemView.findViewById(R.id.text_view_price);
@@ -70,7 +71,7 @@ public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.ViewHolder> 
 
         @Override
         public void run() {
-            Bitmap bitmap = goods.getImage(goods.getId());
+            Bitmap bitmap = goods.getImage(goods.getId(),112,112);
             ((AppCompatActivity)mContext).runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -106,6 +107,12 @@ public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.ViewHolder> 
         holder.textViewNameGoods.setText(goods.getNameGoods());
         holder.textViewNameShop.setText(goods.getNameShop());
         holder.textViewPrice.setText(String.valueOf(goods.getPrice()));
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DetailActivity.actionStart(mContext,goods);
+            }
+        });
         // 读取读取图片并且显示到holder.imageViewGoods上
         // 如果路径为空, 则显示LOGO
 //        ImageView imageView = holder.imageViewGoods;

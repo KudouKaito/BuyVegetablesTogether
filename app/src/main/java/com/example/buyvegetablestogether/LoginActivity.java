@@ -140,7 +140,6 @@ public class LoginActivity extends AppCompatActivity {
         buttonSignInUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // 设置转圈圈
                 ProgressBar progressBar = findViewById(R.id.progressBar);
                 progressBar.setVisibility(View.VISIBLE); // 不知道怎么把progressBar放到最前面来
                 mUserName = textInputUser.getText().toString();

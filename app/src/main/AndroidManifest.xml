@@ -11,9 +11,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ChangePasswordActivity"
+        <activity android:name=".AddCartDialog"
+            android:theme="@style/Theme.MaterialComponents.Light.Dialog"
+            android:label="确定加购"/>
+        <activity android:name=".DetailActivity" />
+        <activity android:name=".BasicInfoActivity" />
+        <activity
+            android:name=".ChangePasswordActivity"
             android:label="修改密码"
-            android:theme="@style/Theme.MaterialComponents.Light.Dialog"/>
+            android:theme="@style/Theme.MaterialComponents.Light.Dialog" />
         <activity android:name=".SettingsActivity" />
         <activity
             android:name=".addgoods.AddGoods"

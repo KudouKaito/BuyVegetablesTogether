@@ -43,7 +43,7 @@
                 android:layout_marginTop="8dp"
                 android:theme="@style/Theme.MaterialComponents.Light"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:text="@string/get_from_album"/>
+                android:text="@string/choose_from_album"/>
         </LinearLayout>
     </LinearLayout>
     <com.google.android.material.textfield.TextInputLayout
@@ -88,6 +88,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:layout_gravity="center_horizontal"
-        android:text="@string/putaway"
+        android:text="@string/put_away"
         android:theme="@style/Theme.MaterialComponents.Light"/>
 </LinearLayout>

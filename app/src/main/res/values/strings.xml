@@ -20,10 +20,10 @@
     <string name="name_shop">店铺</string>
     <string name="display_goods_image">display goods image</string>
     <string name="get_from_camera">从摄像头获取</string>
-    <string name="get_from_album">从相册中获取</string>
+    <string name="choose_from_album">从相册中选择</string>
     <string name="goods_name">商品名称</string>
     <string name="detail">详细介绍</string>
-    <string name="putaway">上架</string>
+    <string name="put_away">上架</string>
     <string name="goods_price">商品价格</string>
     <string name="search">搜索</string>
     <string name="display_all_goods">查看所有商品</string>
@@ -31,12 +31,19 @@
     <string name="str_info_user_name">用户名</string>
     <string name="order">查看订单</string>
     <string name="settings">设置</string>
-    <string name="change_basic_info">修改基本信息</string>
+    <string name="change_basic_info">基本信息</string>
     <string name="change_password">修改密码</string>
     <string name="logout">退出登录</string>
-    <string name="change">修改</string>
     <string name="confirm_new_password">确认新密码</string>
     <string name="input_new_password">输入新密码(6~16位)</string>
     <string name="input_old_password">输入旧密码(同上)</string>
+    <string name="true_name">真实姓名</string>
+    <string name="phone_number">手机号码</string>
+    <string name="address">收货地址</string>
+    <string name="change">修改</string>
+    <string name="name_goods">商品名字</string>
+    <string name="image_goods">商品图片</string>
+    <string name="buy">购买</string>
+    <string name="buy_number">购买数量</string>
 
 </resources>

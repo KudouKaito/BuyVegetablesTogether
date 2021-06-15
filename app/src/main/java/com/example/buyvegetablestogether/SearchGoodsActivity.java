@@ -53,13 +53,15 @@ public class SearchGoodsActivity extends AppCompatActivity {
         buttonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SearchGoodsActivity.actionStart(SearchGoodsActivity.this, editTextSearch.getText().toString());
+                loadingGoods(editTextSearch.getText().toString());
+//                SearchGoodsActivity.actionStart(SearchGoodsActivity.this, editTextSearch.getText().toString());
             }
         });
-        loadingGoods();
+        Intent intent = getIntent();
+        loadingGoods(intent.getStringExtra("search_content"));
     }
 
-    private void loadingGoods() {
+    private void loadingGoods(String searchContent) {
         findViewById(R.id.progress_bar).setVisibility(View.VISIBLE);
         new Thread(new Runnable() {
             @Override
@@ -67,8 +69,6 @@ public class SearchGoodsActivity extends AppCompatActivity {
                 goodsList.clear();
                 // 向列表中添加数据
                 SQLiteDatabase dbGoods = dbHelperGoods.getWritableDatabase();
-                Intent intent = getIntent();
-                String searchContent = intent.getStringExtra("search_content");
                 editTextSearch.setText(searchContent);
                 String sql  = "select * from goods " +
                         "where goods_name like ? or shop_name like ? " +

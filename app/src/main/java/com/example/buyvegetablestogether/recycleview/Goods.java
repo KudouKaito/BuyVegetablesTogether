@@ -1,8 +1,14 @@
 package com.example.buyvegetablestogether.recycleview;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+
+import com.example.buyvegetablestogether.db.GoodsDatabaseHelper;
+import com.example.buyvegetablestogether.utils.ImageProcessor;
+
+import java.io.Serializable;
 
 public class Goods {
     private int id;
@@ -13,7 +19,7 @@ public class Goods {
     private double price;
     private String detail;
 
-    public Goods(Context context,int id, String nameGoods, String nameShop, boolean hasImage, String detail, double price) {
+    public Goods(Context context, int id, String nameGoods, String nameShop, boolean hasImage, String detail, double price) {
         this.id = id;
         this.context = context;
         this.nameGoods = nameGoods;
@@ -22,32 +28,39 @@ public class Goods {
         this.hasImage = hasImage;
         this.detail = detail;
     }
-    public Goods(Context context,int id,String nameGoods,String nameShop,boolean hasImage,double price) {
-        this(context,id,nameGoods, nameShop, hasImage, null, price);
+
+    public Goods(Context context, int id, String nameGoods, String nameShop, boolean hasImage, double price) {
+        this(context, id, nameGoods, nameShop, hasImage, null, price);
     }
 
-    public void addDetail(String detail) {
-        this.detail = detail;
-    }
-    public  int getId() {
+    public int getId() {
         return id;
     }
+
     public String getNameGoods() {
         return nameGoods;
     }
+
     public String getNameShop() {
         return nameShop;
     }
+
     public boolean judgeHasImage() {
         return hasImage;
     }
+
     public double getPrice() {
         return price;
     }
+
     public String getDetail() {
+        GoodsDatabaseHelper dbHelperGoods = new GoodsDatabaseHelper(context, "GoodsDatabase.db", null, 1);
+        SQLiteDatabase dbGoods = dbHelperGoods.getWritableDatabase();
+        dbGoods.query("goods", new String[]{"detail"}, "id = ?", new String[]{String.valueOf(getId())}, null, null, null);
         return detail;
     }
-    public Bitmap getImage(int id) {
-        return BitmapFactory.decodeFile(context.getFilesDir().getAbsolutePath() + "/" + id + ".jpg");
+
+    public Bitmap getImage(int id, int dpW, int dpH) {
+        return ImageProcessor.readImageResizeToDp(context, context.getFilesDir().getAbsolutePath() + "/" + id + ".jpg", dpW, dpH);
     }
 }

@@ -1,8 +1,11 @@
 package com.example.buyvegetablestogether.nav;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
@@ -11,6 +14,8 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,12 +23,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.buyvegetablestogether.AllGoodsActivity;
 import com.example.buyvegetablestogether.LoginActivity;
 import com.example.buyvegetablestogether.MainActivity;
 import com.example.buyvegetablestogether.R;
+import com.example.buyvegetablestogether.db.GoodsDatabaseHelper;
+import com.example.buyvegetablestogether.recycleview.Goods;
+import com.example.buyvegetablestogether.recycleview.GoodsAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+
+import static news.jaywei.com.compresslib.FileUtil.runOnUiThread;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,7 +44,7 @@ import java.util.Objects;
  * create an instance of this fragment.
  */
 public class CartPage extends Fragment {
-
+    private List<Goods> cartList = new ArrayList<Goods>();
     private static final String TAG = "CartPage";
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -68,14 +81,6 @@ public class CartPage extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LoginActivity.currentUserVerify(requireContext());  // 进行先行登录帐号有效性验证
-        if (LoginActivity.currentUserName.equals("")) {  // 验证没通过
-            Intent intent = new Intent(requireContext(), LoginActivity.class);
-            intent.putExtra("intent_source",2);
-            startActivityForResult(intent,2);
-        } else {
-            displayCart();
-        }
 
 //        if (getArguments() != null) {
 //            mParam1 = getArguments().getString(ARG_PARAM1);
@@ -109,8 +114,59 @@ public class CartPage extends Fragment {
         }
 
     }
-// TODO: DisplayCart
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        LoginActivity.currentUserVerify(requireContext());  // 进行先行登录帐号有效性验证
+        if (LoginActivity.currentUserName.equals("")) {  // 验证没通过
+            Intent intent = new Intent(requireContext(), LoginActivity.class);
+            intent.putExtra("intent_source",2);
+            startActivityForResult(intent,2);
+        } else {
+            displayCart();
+        }
+
+    }
+
+    // TODO: DisplayCart
     private void displayCart() {
-        Log.d(TAG, "displayCart: 222222222222222222222");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                cartList.clear();
+                // 向列表中添加数据
+                GoodsDatabaseHelper dbHelperGoods = new GoodsDatabaseHelper(requireContext(), "GoodsDatabase.db", null, 1);
+                SQLiteDatabase dbGoods = dbHelperGoods.getWritableDatabase();
+
+                Cursor cursor = dbGoods.query("goods", new String[]{"id","goods_name", "price", "shop_name", "has_image"}, null, null, null, null, null);
+                if (cursor.moveToFirst()) {
+                    do {
+                        cartList.add(new Goods(
+                                requireContext(),
+                                cursor.getInt(cursor.getColumnIndex("id")),
+                                cursor.getString(cursor.getColumnIndex("goods_name")),
+                                cursor.getString(cursor.getColumnIndex("shop_name")),
+                                1 == cursor.getInt(cursor.getColumnIndex("has_image")),
+                                cursor.getDouble(cursor.getColumnIndex("price"))
+                        ));
+
+                    } while (cursor.moveToNext());
+                }
+                cursor.close();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // 摆放到recyclerView上
+                        RecyclerView recyclerView = requireActivity().findViewById(R.id.recyclerview_cart);
+                        LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext());
+                        recyclerView.setLayoutManager(layoutManager);
+                        GoodsAdapter adapter = new GoodsAdapter(cartList);
+                        recyclerView.setAdapter(adapter);
+
+                    }
+                });
+            }
+        }).start();
     }
 }
